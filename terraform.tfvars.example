@@ -1,0 +1,64 @@
+# Copy this file to terraform.tfvars and fill in your real values.
+# Never commit terraform.tfvars to source control — it may contain secrets.
+#
+#   cp terraform.tfvars.example terraform.tfvars
+
+# ============================================================
+# Azure
+# ============================================================
+
+subscription_id = "00000000-0000-0000-0000-000000000000"   # Your Azure Subscription ID
+location        = "eastus"                                  # e.g. eastus, westeurope, southeastasia
+
+# ============================================================
+# Resource Group
+# ============================================================
+
+resource_group_name   = "rg-databricks-<env>"   # e.g. rg-databricks-dev
+create_resource_group = true                     # false = use an existing resource group
+
+# ============================================================
+# Databricks Workspace
+# ============================================================
+
+workspace_name              = "dbw-<project>-<env>"           # e.g. dbw-myproject-dev
+sku                         = "premium"                        # standard | premium | trial
+managed_resource_group_name = "rg-databricks-managed-<env>"   # optional; set null to let Azure auto-name it
+
+# ============================================================
+# Databricks Cluster
+# ============================================================
+
+cluster_name            = "cluster-<project>-<env>"   # e.g. cluster-myproject-dev
+spark_version           = "13.3.x-scala2.12"          # Databricks Runtime version
+node_type_id            = "Standard_DS3_v2"            # Azure VM size for cluster nodes
+autotermination_minutes = 30                           # 0 = never auto-terminate
+
+# --- Scaling (choose one mode) ---
+#
+#   Autoscale ON  → set enable_autoscale = true,  provide min_workers and max_workers
+#   Autoscale OFF → set enable_autoscale = false, provide num_workers
+
+enable_autoscale = true
+min_workers      = 1
+max_workers      = 5
+num_workers      = 2   # used only when enable_autoscale = false
+
+# --- Spark configuration (optional) ---
+
+spark_conf = {
+  "spark.databricks.delta.preview.enabled" = "true"
+  # "spark.sql.shuffle.partitions"          = "200"
+}
+
+# ============================================================
+# Tags — applied to all resources
+# ============================================================
+
+tags = {
+  Environment = "<env>"           # dev | staging | prod
+  Project     = "<project-name>"
+  ManagedBy   = "Terraform"
+  Owner       = "<team-or-email>"
+  CostCenter  = "<cost-center>"
+}

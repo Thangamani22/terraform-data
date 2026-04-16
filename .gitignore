@@ -1,0 +1,9 @@
+*.tfvars
+*.tfstate
+*.tfstate.backup
+.terraform.lock.hcl
+*.tfplan
+
+# Local .terraform directories
+**/.terraform/*
+.terraform/
