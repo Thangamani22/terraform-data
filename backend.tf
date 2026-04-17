@@ -11,6 +11,6 @@ terraform {
 #
 # Run the following to create the storage account (one-time setup):
 #
-#   az group create --name rg-terraform-state --location eastus
-#   az storage account create --name stterraformstate --resource-group rg-terraform-state --sku Standard_LRS
-#   az storage container create --name tfstate --account-name stterraformstate
+#   az group create --name tf-backend-rg --location eastus
+#   az storage account create --name tfstatedemo8754952 --resource-group tf-backend-rg --sku Standard_LRS
+#   az storage container create --name tfstate --account-name tfstatedemo8754952
