@@ -31,7 +31,7 @@ stages:
     - task: ms-devlabs.custom-terraform-tasks.custom-terraform-installer-task.TerraformInstaller@1
       displayName: 'Terraform Task'
       inputs:
-        terraformVersion: '1.14.3'
+        terraformVersion: '1.6.6'
 
     - script: |
         curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
@@ -55,8 +55,11 @@ stages:
 # -------------------------
 - stage: apply
   displayName: 'Terraform Apply'
+  dependsOn: plan
+
   jobs:
-  - job: terraform_apply
+  - deployment: terraform_apply
+    environment: production
     displayName: 'Terraform Apply Job'
     steps:
 
@@ -78,7 +81,7 @@ stages:
     - task: ms-devlabs.custom-terraform-tasks.custom-terraform-installer-task.TerraformInstaller@1
       displayName: 'Terraform Task'
       inputs:
-        terraformVersion: '1.14.3'
+        terraformVersion: '1.6.6'
 
     - script: |
         curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
@@ -92,5 +95,5 @@ stages:
         scriptLocation: inlineScript
         inlineScript: |
           terraform init
-          terraform apply -auto-approve tfplan
+          terraform apply tfplan
 
