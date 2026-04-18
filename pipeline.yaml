@@ -1,0 +1,28 @@
+trigger:
+- main
+
+pool:
+  agent: '<self-hosted>'
+
+stages:
+- stage: deploy
+  jobs:
+  - job: deploy
+    steps:
+
+    - checkout: self
+    - task: terraformInstaller@0
+      inputs:
+        terraformVersion: '1.14.3'
+
+    - script: |
+        terraform init
+      DisplayName: 'Terraform Init'
+
+    - script: |
+        terraform plan
+      DisplayName: 'Terraform Plan'
+
+    - script: |
+        terraform apply
+      DisplayName: 'Terraform Apply'
