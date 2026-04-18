@@ -59,41 +59,44 @@ stages:
 
   jobs:
   - deployment: terraform_apply
-    environment: production
     displayName: 'Terraform Apply Job'
-    steps:
+    environment: production
+    strategy:
+      runOnce:
+        deploy:
+          steps:
 
-    - checkout: self
+            - checkout: self
 
-    - download: current
-      artifact: terraformPlan
+            - download: current
+              artifact: terraformPlan
 
-    - script: |
-        pwd
-        ls -al
-      displayName: 'Show workspace'
+            - script: |
+                pwd
+                ls -al
+              displayName: 'Show workspace'
 
-    - script: |
-        sudo apt-get update
-        sudo apt-get install -y unzip
-      displayName: 'Install Unzip'
+            - script: |
+                sudo apt-get update
+                sudo apt-get install -y unzip
+              displayName: 'Install Unzip'
 
-    - task: ms-devlabs.custom-terraform-tasks.custom-terraform-installer-task.TerraformInstaller@1
-      displayName: 'Terraform Task'
-      inputs:
-        terraformVersion: '1.6.6'
+            - task: ms-devlabs.custom-terraform-tasks.custom-terraform-installer-task.TerraformInstaller@1
+              displayName: 'Terraform Task'
+              inputs:
+                terraformVersion: '1.6.6'
 
-    - script: |
-        curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
-      displayName: 'Install Azure CLI'
+            - script: |
+                curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+              displayName: 'Install Azure CLI'
 
-    - task: AzureCLI@2
-      displayName: 'Login to Azure and run Terraform'
-      inputs:
-        azureSubscription: 'bicep-deployment-test-access'
-        scriptType: bash
-        scriptLocation: inlineScript
-        inlineScript: |
-          terraform init
-          terraform apply tfplan
+            - task: AzureCLI@2
+              displayName: 'Login to Azure and run Terraform'
+              inputs:
+                azureSubscription: 'bicep-deployment-test-access'
+                scriptType: bash
+                scriptLocation: inlineScript
+                inlineScript: |
+                  terraform init
+                  terraform apply tfplan
 
