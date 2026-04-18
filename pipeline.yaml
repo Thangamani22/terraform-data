@@ -5,9 +5,15 @@ pool:
   name: 'sh-tf-agent-pool'
 
 stages:
-- stage: deploy
+
+# -------------------------
+# Stage 1: Terraform Plan
+# -------------------------
+- stage: plan
+  displayName: 'Terraform Plan'
   jobs:
-  - job: deploy
+  - job: terraform_plan
+    displayName: 'Terraform Plan Job'
     steps:
 
     - checkout: self
@@ -39,5 +45,52 @@ stages:
         scriptLocation: inlineScript
         inlineScript: |
           terraform init
-          terraform plan
-          terraform apply -auto-approve
+          terraform plan -out=tfplan
+        
+    - publish: tfplan
+      artifact: terraformPlan
+
+# -------------------------
+# Stage 2: Terraform Apply
+# -------------------------
+- stage: apply
+  displayName: 'Terraform Apply'
+  jobs:
+  - job: terraform_apply
+    displayName: 'Terraform Apply Job'
+    steps:
+
+    - checkout: self
+
+    - download: current
+      artifact: terraformPlan
+
+    - script: |
+        pwd
+        ls -al
+      displayName: 'Show workspace'
+
+    - script: |
+        sudo apt-get update
+        sudo apt-get install -y unzip
+      displayName: 'Install Unzip'
+
+    - task: ms-devlabs.custom-terraform-tasks.custom-terraform-installer-task.TerraformInstaller@1
+      displayName: 'Terraform Task'
+      inputs:
+        terraformVersion: '1.14.3'
+
+    - script: |
+        curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+      displayName: 'Install Azure CLI'
+
+    - task: AzureCLI@2
+      displayName: 'Login to Azure and run Terraform'
+      inputs:
+        azureSubscription: 'bicep-deployment-test-access'
+        scriptType: bash
+        scriptLocation: inlineScript
+        inlineScript: |
+          terraform init
+          terraform apply -auto-approve tfplan
+
