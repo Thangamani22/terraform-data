@@ -37,7 +37,7 @@ stages:
         azureSubscription: 'bicep-deployment-test-access'
         scriptType: bash
         scriptLocation: inlineScript
-      inlineScript: |
-        terraform init
-        terraform plan
-        terraform apply -auto-approve
+        inlineScript: |
+          terraform init
+          terraform plan
+          terraform apply -auto-approve
