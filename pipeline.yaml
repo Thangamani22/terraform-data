@@ -12,7 +12,8 @@ stages:
 
     - checkout: self
 
-    - task: terraformInstaller@0
+    - task: ms-devlabs.custom-terraform-task.terraformTask.TerraformTask@0
+      displayName: 'Terraform Task'
       inputs:
         terraformVersion: '1.14.3'
 
@@ -25,5 +26,5 @@ stages:
       displayName: 'Terraform Plan'
 
     - script: |
-        terraform apply
+        terraform apply --auto-approve
       displayName: 'Terraform Apply'
