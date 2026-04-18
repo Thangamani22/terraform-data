@@ -12,6 +12,16 @@ stages:
 
     - checkout: self
 
+    - script: |
+        pwd
+        ls -al
+      displayName: 'Show workspace'
+
+    - script: |
+        sudo apt-get update
+        sudo apt-get install -y unzip
+      displayName: 'Install Unzip'
+
     - task: ms-devlabs.custom-terraform-tasks.custom-terraform-installer-task.TerraformInstaller@1
       displayName: 'Terraform Task'
       inputs:
