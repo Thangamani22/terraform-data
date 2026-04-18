@@ -12,7 +12,7 @@ stages:
 
     - checkout: self
 
-    - task: ms-devlabs.custom-terraform-task.terraformTask.TerraformTask@0
+    - task: ms-devlabs.custom-terraform-tasks.custom-terraform-installer-task.TerraformInstaller@1
       displayName: 'Terraform Task'
       inputs:
         terraformVersion: '1.14.3'
