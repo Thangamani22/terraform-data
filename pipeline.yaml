@@ -28,13 +28,16 @@ stages:
         terraformVersion: '1.14.3'
 
     - script: |
+        curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+      displayName: 'Install Azure CLI'
+
+    - task: AzureCLI@2
+      displayName: 'Login to Azure and run Terraform'
+      inputs:
+        azureSubscription: 'bicep-deployment-test-access'
+        scriptType: bash
+        scriptLocation: inlineScript
+      inlineScript: |
         terraform init
-      displayName: 'Terraform Init'
-
-    - script: |
         terraform plan
-      displayName: 'Terraform Plan'
-
-    - script: |
-        terraform apply --auto-approve
-      displayName: 'Terraform Apply'
+        terraform apply -auto-approve
