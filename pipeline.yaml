@@ -11,18 +11,19 @@ stages:
     steps:
 
     - checkout: self
+
     - task: terraformInstaller@0
       inputs:
         terraformVersion: '1.14.3'
 
     - script: |
         terraform init
-      DisplayName: 'Terraform Init'
+      displayName: 'Terraform Init'
 
     - script: |
         terraform plan
-      DisplayName: 'Terraform Plan'
+      displayName: 'Terraform Plan'
 
     - script: |
         terraform apply
-      DisplayName: 'Terraform Apply'
+      displayName: 'Terraform Apply'
