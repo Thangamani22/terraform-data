@@ -90,6 +90,10 @@ stages:
                 curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
               displayName: 'Install Azure CLI'
 
+            - script: |
+                cp $(Pipeline.Workspace)/terraformPlan/tfplan .
+              displayName: 'Move tfplan to working directory'
+
             - task: AzureCLI@2
               displayName: 'Login to Azure and run Terraform'
               inputs:
